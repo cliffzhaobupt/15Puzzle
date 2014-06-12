@@ -14,6 +14,28 @@
 
 USING_NS_CC;
 
+//generate random number for placing the puzzle boxes
+std::vector<int> * GameLayer::generateRandomNumbers() {
+    //generate random numbers
+    std::vector<int> * randomNumbers = new std::vector<int>;
+    
+#ifdef EASY_GAME
+    for (int i = 1 ; i < 15 ; ++ i) {
+        randomNumbers->push_back(i);
+    }
+    randomNumbers->push_back(16);
+    randomNumbers->push_back(15);
+#else
+    for (int i = 1 ; i < 17; ++ i) {
+        randomNumbers->push_back(i);
+    }
+    srand(static_cast<unsigned int>(time(0)));
+    std::random_shuffle(randomNumbers->begin(), randomNumbers->end());
+#endif
+    
+    return randomNumbers;
+}
+
 //initialize the GameLayer
 bool GameLayer::init() {
     //run the init() method of the base class - CCLayer
@@ -25,7 +47,7 @@ bool GameLayer::init() {
     _screenSize = CCDirector::sharedDirector()->getWinSize();
     //create CCArray by capacity
     _boxes = CCArray::createWithCapacity(15);
-    
+    //create game finish CCLabelTTF
     _finishLabel = CCLabelTTF::create("You Win", "Arial", 150);
     ccColor3B textColor;
     textColor.r = 0;
@@ -37,36 +59,23 @@ bool GameLayer::init() {
     this->addChild(_finishLabel, kFinishLabel);
     
     //generate random numbers
-    std::vector<int> randomNumbers;
-
-#ifdef EASY_GAME
-    for (int i = 1 ; i < 15 ; ++ i) {
-        randomNumbers.push_back(i);
-    }
-    randomNumbers.push_back(16);
-    randomNumbers.push_back(15);
-#else
-    for (int i = 1 ; i < 17; ++ i) {
-        randomNumbers.push_back(i);
-    }
-    srand(static_cast<unsigned int>(time(0)));
-    std::random_shuffle(randomNumbers.begin(), randomNumbers.end());
-#endif
-
+    std::vector<int> * randomNumbers = generateRandomNumbers();
     
     //add 16 PuzzleBoxSprites to current GameLayer
-    const float timesArr[] = {-1.5, -0.5, 0.5, 1.5};
     for (int i = 0 ; i < 16 ; ++i) {
-        PuzzleBoxSprite * box = PuzzleBoxSprite::initPuzzleBoxSpriteWithId(randomNumbers[i], _screenSize);
+        PuzzleBoxSprite * box = PuzzleBoxSprite::initPuzzleBoxSpriteWithId((*randomNumbers)[i], _screenSize);
         box->setPositionId(i + 1);
         box->setPosition(ccp(
             _screenSize.width * 0.5 +  box->getContentSize().width * timesArr[i % 4],
             _screenSize.height * 0.5 + box->getContentSize().width * timesArr[3 - i / 4]));
         
-        this->addChild(box, kPuzzleBox);
+        this->addChild(box, kPuzzleBox, (*randomNumbers)[i]);
         //save puzzle box sprites to CCArray
         _boxes->addObject(box);
     }
+    
+    delete randomNumbers;
+    
     //retain the CCArray for future use
     _boxes->retain();
     
@@ -89,6 +98,13 @@ CCScene * GameLayer::scene() {
 
 //touch handler
 void GameLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *event) {
+    //if game's finished, reset the game
+    if (_finishLabel->isVisible()) {
+        resetGame();
+        _finishLabel->setVisible(false);
+        return;
+    }
+    
     //if there's CCAction running, return directly
     if (! _canClickBox) return;
     
@@ -159,6 +175,20 @@ void GameLayer::setCanClickBox() {
 
 void GameLayer::update(float dt) {
     
+}
+
+void GameLayer::resetGame() {
+    //generate random numbers
+    std::vector<int> * randomNumbers = generateRandomNumbers();
+
+    for (int i = 0 ; i < randomNumbers->size() ; ++ i) {
+        PuzzleBoxSprite * currentBox = (PuzzleBoxSprite *) this->getChildByTag((*randomNumbers)[i]);
+        currentBox->setPositionId(i + 1);
+        currentBox->setPosition(ccp(_screenSize.width * 0.5 +  currentBox->getContentSize().width * timesArr[i % 4],
+            _screenSize.height * 0.5 + currentBox->getContentSize().width * timesArr[3 - i / 4]));
+    }
+    
+    delete randomNumbers;
 }
 
 GameLayer::~GameLayer() {

@@ -14,6 +14,7 @@
 using namespace cocos2d;
 
 enum zIndex {kPuzzleBox, kFinishLabel};
+const float timesArr[] = {-1.5, -0.5, 0.5, 1.5};
 
 class GameLayer : public CCLayer {
     //screen size
@@ -22,6 +23,7 @@ class GameLayer : public CCLayer {
     CCArray * _boxes;
     //use to diable touch when the animation is running
     bool _canClickBox;
+    //game finish label
     CCLabelTTF * _finishLabel;
 
     
@@ -33,6 +35,8 @@ public:
     ~GameLayer();
     virtual void ccTouchesBegan(CCSet * pTouches, CCEvent * event);
     void setCanClickBox();
+    void resetGame();
+    std::vector<int> * generateRandomNumbers();
 };
 
 #endif /* defined(___5Puzzle__GameLayer__) */
