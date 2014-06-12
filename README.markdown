@@ -1,4 +1,7 @@
-15 Puzzle
+## Introduction
+15 Puzzle Game Development Exercise
+
+Using cocos2d-x-2.2.2
 
 ## Week 1
 <img src="https://github.com/cliffzhaobupt/15Puzzle/raw/master/SampleGIF/basic_move.gif"/>
