@@ -47,16 +47,80 @@ bool GameLayer::init() {
     _screenSize = CCDirector::sharedDirector()->getWinSize();
     //create CCArray by capacity
     _boxes = CCArray::createWithCapacity(15);
+    
+    
+    
+    //create prompt
+    _prompt = CCSprite::create("PromptBackground.png");
+    _prompt->setPosition(ccp(_screenSize.width * 0.5f, _screenSize.height * 0.5f + 220));
+    _prompt->setVisible(false);
+    
     //create game finish CCLabelTTF
-    _finishLabel = CCLabelTTF::create("You Win", "Arial", 150);
-    ccColor3B textColor;
-    textColor.r = 0;
-    textColor.g = 0;
-    textColor.b = 0;
-    _finishLabel->setColor(textColor);
-    _finishLabel->setPosition(ccp(_screenSize.width * 0.5, _screenSize.height * 0.5));
-    _finishLabel->setVisible(false);
-    this->addChild(_finishLabel, kFinishLabel);
+    _finishLabel = CCLabelTTF::create("You Win", "Arial", 40);
+    _finishLabel->setColor(ccc3(0, 0, 0));
+    _finishLabel->setPosition(ccp(300, 300));
+    _prompt->addChild(_finishLabel, kFinishLabel);
+    
+    //
+    CCMenuItemFont::setFontSize(40);
+    _playAgain = CCMenuItemFont::create("New Game", this, menu_selector(GameLayer::menuInPromptCallback));
+    _playAgain->setColor(ccc3(255, 0, 0));
+    _playAgain->setPosition(0, 30);
+    _ranking = CCMenuItemFont::create("Ranking", this, menu_selector(GameLayer::menuInPromptCallback));
+    _ranking->setColor(ccc3(0, 0, 255));
+    _ranking->setPosition(0, -30);
+    _gameMenu = CCMenu::create();
+    _gameMenu->addChild(_playAgain, kMenuInPrompt, kPlayAgain);
+    _gameMenu->addChild(_ranking, kMenuInPrompt, kSeeRanking);
+    _gameMenu->setPosition(ccp(300, 180));
+    
+    _gameMenu->setVisible(false);
+    _prompt->addChild(_gameMenu, kMenuInPrompt);
+    
+    //create name input text field
+    _nameInput = UserNameInputField::createUserNameInputField("Your name...", "Arial", 40);
+    _nameInput->setColor(ccc3(0, 0, 0));
+    _nameInput->setColorSpaceHolder(ccc3(150, 150, 150));
+    _nameInput->setPosition(ccp(300, 225));
+    _nameInput->setMaxLength(10);
+    _nameInput->setMaxLengthEnabled(true);
+    //
+    _nameInput->setUserObject(_prompt);
+    _prompt->addChild(_nameInput, kNameInput);
+    
+    
+    
+    _nameEneter = CCMenuItemFont::create("Edit Name", this, menu_selector(GameLayer::menuInPromptCallback));
+    _nameEneter->setColor(ccc3(0, 255, 0));
+    _nameEneter->setPosition(-100, 0);
+    _nameOK = CCMenuItemFont::create("OK", this, menu_selector(GameLayer::menuInPromptCallback));
+    _nameOK->setColor(ccc3(0, 0, 255));
+    _nameOK->setPosition(100, 0);
+    _nameMenu = CCMenu::create();
+    _nameMenu->addChild(_nameEneter, kNameBtn, kEditName);
+    _nameMenu->addChild(_nameOK, kNameBtn, kNameOK);
+    _nameMenu->setPosition(ccp(300, 150));
+    _prompt->addChild(_nameMenu, kNameBtn);
+    
+    this->addChild(_prompt, kPrompt);
+    
+    //create restart button
+    _restartBtn = CCMenuItemFont::create("Restart Game", this, menu_selector(GameLayer::restartBtnCallback));
+    _restartBtn->setFontSizeObj(40);
+    _restartBtn->setAnchorPoint(ccp(0, 0));
+    _restartBtn->setPosition(40, 20);
+    _upperBtns = CCMenu::createWithItem(_restartBtn);
+    _upperBtns->setAnchorPoint(ccp(0, 0));
+    _upperBtns->setPosition(ccp(0, _screenSize.height * 0.5 + 300));
+    this->addChild(_upperBtns);
+    
+    //create time label
+    _timeAdder = 0.0;
+    _timeToDisplay = 0;
+    _timeLabel = CCLabelTTF::create("0", "Arial", 80);
+    _timeLabel->setPosition(ccp(_screenSize.width - 30, _screenSize.height * 0.5 - 300));
+    _timeLabel->setAnchorPoint(ccp(1, 1));
+    this->addChild(_timeLabel, kTimeLabel);
     
     //generate random numbers
     std::vector<int> * randomNumbers = generateRandomNumbers();
@@ -76,14 +140,21 @@ bool GameLayer::init() {
     
     delete randomNumbers;
     
+    _localRankingAccessor = RankingAccessor::createRankingAccessor("LocalRanking.json");
+    
     //retain the CCArray for future use
     _boxes->retain();
     
     //enable user to touch the boxes(illustrating no animation running)
     _canClickBox = true;
     
+    _gameFinished = false;
+    
     //enable touch
     this->setTouchEnabled(true);
+    
+    //create main loop
+    this->schedule(schedule_selector(GameLayer::update));
     
     return true;
 }
@@ -98,15 +169,12 @@ CCScene * GameLayer::scene() {
 
 //touch handler
 void GameLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *event) {
-    //if game's finished, reset the game
-    if (_finishLabel->isVisible()) {
-        resetGame();
-        _finishLabel->setVisible(false);
-        return;
-    }
     
     //if there's CCAction running, return directly
     if (! _canClickBox) return;
+    
+    //if the game has finished, return directly
+    if (_gameFinished) return;
     
     //get one CCTouch object from CCSet - anyObject() method
     CCTouch * touch = (CCTouch *) pTouches->anyObject();
@@ -135,8 +203,8 @@ void GameLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *event) {
                             CCPoint tempPoint = adjacentCheck->getPosition();
                             adjacentCheck->setPosition(currentBox->getPosition());
                             //create CCAction of the touching box - moving to the position of the blank box and after running animation, call function to enable touching boxes
-                            CCAction * currentBoxAction = CCSequence::create(
-                                CCMoveTo::create(0.3f, tempPoint),
+                            CCActionInterval * currentBoxAction = CCSequence::create(
+                                CCEaseInOut::create(CCMoveTo::create(0.3f, tempPoint), 0.5f),
                                 CCCallFunc::create(this, callfunc_selector(GameLayer::setCanClickBox)), NULL);
                             currentBox->runAction(currentBoxAction);
                             //update position id of the 2 boxes for future use
@@ -153,7 +221,14 @@ void GameLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *event) {
                                 }
                             }
                             if (finish) {
-                                _finishLabel->setVisible(true);
+                                _finishLabel->setString(CCString::createWithFormat("Clear in %d seconds", _timeToDisplay)->getCString());
+
+                                CCString textInInput = CCString(_nameInput->getString());
+                                if (textInInput.length() == 0)
+                                    _nameInput->openIME();
+                                
+                                _gameFinished = true;
+                                _prompt->setVisible(true);
                             }
                             
                             delete adjacentPosIds;
@@ -174,10 +249,29 @@ void GameLayer::setCanClickBox() {
 }
 
 void GameLayer::update(float dt) {
-    
+    if (! _gameFinished) {
+        _timeAdder += dt;
+        if (_timeAdder >= 1) {
+            _timeAdder = 0;
+            ++ _timeToDisplay;
+            CCString * timeStr = CCString::createWithFormat("%d", _timeToDisplay);
+            _timeLabel->setString(timeStr->getCString());
+        }
+    }
+
 }
 
 void GameLayer::resetGame() {
+
+    _gameFinished = false;
+    _timeLabel->setString("0");
+    _timeToDisplay = 0;
+    _timeAdder = 0;
+    
+    _nameMenu->setVisible(true);
+    _gameMenu->setVisible(false);
+    _nameInput->setVisible(true);
+    
     //generate random numbers
     std::vector<int> * randomNumbers = generateRandomNumbers();
 
@@ -191,6 +285,42 @@ void GameLayer::resetGame() {
     delete randomNumbers;
 }
 
+void GameLayer::menuInPromptCallback(CCObject *pSender) {
+    CCNode * target = (CCNode *) pSender;
+    switch (target->getTag()) {
+        case kPlayAgain:
+            _prompt->setVisible(false);
+            resetGame();
+            break;
+            
+        case kEditName:
+            _nameInput->openIME();
+            break;
+        
+        case kNameOK:
+            if (_nameInput->getCharCount() == 0)
+                return;
+            _nameMenu->setVisible(false);
+            _gameMenu->setVisible(true);
+            _nameInput->setVisible(false);
+            _localRankingAccessor->insertRankingItem(_nameInput->getString(), _timeToDisplay);
+            break;
+        
+            
+        case kSeeRanking:
+            CCScene * rankingScene = CCTransitionFade::create(1.0f, RankingLayer::scene());
+            CCDirector::sharedDirector()->replaceScene(rankingScene);
+            
+    }
+}
+
+void GameLayer::restartBtnCallback(CCObject *pSender) {
+    if (_gameFinished) return;
+    resetGame();
+}
+
 GameLayer::~GameLayer() {
     CC_SAFE_RELEASE(_boxes);
+    delete _localRankingAccessor;
 }
+

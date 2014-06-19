@@ -185,6 +185,13 @@
 		1B0095D019483B5900E76424 /* box15.png in Resources */ = {isa = PBXBuildFile; fileRef = 1B0095CB19483B5900E76424 /* box15.png */; };
 		1B0095D21948491A00E76424 /* box16.png in Resources */ = {isa = PBXBuildFile; fileRef = 1B0095D11948491A00E76424 /* box16.png */; };
 		1B0095D51948496800E76424 /* PuzzleBoxSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B0095D31948496800E76424 /* PuzzleBoxSprite.cpp */; };
+		1B0095DB194FF6DF00E76424 /* MenuLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B0095D9194FF6DF00E76424 /* MenuLayer.cpp */; };
+		1B0095DD195002F700E76424 /* GameTitle.png in Resources */ = {isa = PBXBuildFile; fileRef = 1B0095DC195002F700E76424 /* GameTitle.png */; };
+		1B0095DF195028D700E76424 /* PromptBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1B0095DE195028D700E76424 /* PromptBackground.png */; };
+		1B0095E91951508E00E76424 /* RankingAccessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B0095E71951508E00E76424 /* RankingAccessor.cpp */; };
+		1B0095ED195159BB00E76424 /* LocalRanking.json in Resources */ = {isa = PBXBuildFile; fileRef = 1B0095EC195159BB00E76424 /* LocalRanking.json */; };
+		1BCC8A551951D50A00C80EE7 /* RankingLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1BCC8A531951D50A00C80EE7 /* RankingLayer.cpp */; };
+		1BCC8A5E1952C48400C80EE7 /* UserNameInputField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1BCC8A5C1952C48400C80EE7 /* UserNameInputField.cpp */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765A40DF7441C002DB57D /* CoreGraphics.framework */; };
@@ -623,6 +630,17 @@
 		1B0095D11948491A00E76424 /* box16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = box16.png; sourceTree = "<group>"; };
 		1B0095D31948496800E76424 /* PuzzleBoxSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PuzzleBoxSprite.cpp; path = ../Classes/PuzzleBoxSprite.cpp; sourceTree = "<group>"; };
 		1B0095D41948496800E76424 /* PuzzleBoxSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PuzzleBoxSprite.h; path = ../Classes/PuzzleBoxSprite.h; sourceTree = "<group>"; };
+		1B0095D9194FF6DF00E76424 /* MenuLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MenuLayer.cpp; path = ../Classes/MenuLayer.cpp; sourceTree = "<group>"; };
+		1B0095DA194FF6DF00E76424 /* MenuLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuLayer.h; path = ../Classes/MenuLayer.h; sourceTree = "<group>"; };
+		1B0095DC195002F700E76424 /* GameTitle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GameTitle.png; sourceTree = "<group>"; };
+		1B0095DE195028D700E76424 /* PromptBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PromptBackground.png; sourceTree = "<group>"; };
+		1B0095E71951508E00E76424 /* RankingAccessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RankingAccessor.cpp; path = ../Classes/RankingAccessor.cpp; sourceTree = "<group>"; };
+		1B0095E81951508E00E76424 /* RankingAccessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RankingAccessor.h; path = ../Classes/RankingAccessor.h; sourceTree = "<group>"; };
+		1B0095EC195159BB00E76424 /* LocalRanking.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = LocalRanking.json; sourceTree = "<group>"; };
+		1BCC8A531951D50A00C80EE7 /* RankingLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RankingLayer.cpp; path = ../Classes/RankingLayer.cpp; sourceTree = "<group>"; };
+		1BCC8A541951D50A00C80EE7 /* RankingLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RankingLayer.h; path = ../Classes/RankingLayer.h; sourceTree = "<group>"; };
+		1BCC8A5C1952C48400C80EE7 /* UserNameInputField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UserNameInputField.cpp; path = ../Classes/UserNameInputField.cpp; sourceTree = "<group>"; };
+		1BCC8A5D1952C48400C80EE7 /* UserNameInputField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserNameInputField.h; path = ../Classes/UserNameInputField.h; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* 15Puzzle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 15Puzzle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -1292,8 +1310,16 @@
 				1B0095B11948269200E76424 /* GameLayer.h */,
 				1AFAF8B516D35DE700DB1158 /* HelloWorldScene.cpp */,
 				1AFAF8B616D35DE700DB1158 /* HelloWorldScene.h */,
+				1B0095D9194FF6DF00E76424 /* MenuLayer.cpp */,
+				1B0095DA194FF6DF00E76424 /* MenuLayer.h */,
 				1B0095D31948496800E76424 /* PuzzleBoxSprite.cpp */,
 				1B0095D41948496800E76424 /* PuzzleBoxSprite.h */,
+				1B0095E71951508E00E76424 /* RankingAccessor.cpp */,
+				1B0095E81951508E00E76424 /* RankingAccessor.h */,
+				1BCC8A531951D50A00C80EE7 /* RankingLayer.cpp */,
+				1BCC8A541951D50A00C80EE7 /* RankingLayer.h */,
+				1BCC8A5C1952C48400C80EE7 /* UserNameInputField.cpp */,
+				1BCC8A5D1952C48400C80EE7 /* UserNameInputField.h */,
 			);
 			name = Classes;
 			path = ../classes;
@@ -1748,6 +1774,9 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1B0095EC195159BB00E76424 /* LocalRanking.json */,
+				1B0095DE195028D700E76424 /* PromptBackground.png */,
+				1B0095DC195002F700E76424 /* GameTitle.png */,
 				1B0095B31948280C00E76424 /* box1.png */,
 				1B0095C11948320000E76424 /* box10.png */,
 				1B0095C719483B5900E76424 /* box11.png */,
@@ -1848,6 +1877,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B0095DD195002F700E76424 /* GameTitle.png in Resources */,
 				1B0095CD19483B5900E76424 /* box12.png in Resources */,
 				7855E0E1153FEF240059DD9A /* Default.png in Resources */,
 				1B0095C51948320000E76424 /* box9.png in Resources */,
@@ -1857,6 +1887,7 @@
 				D4EF94A015BD2D9800D803EB /* Icon-144.png in Resources */,
 				1B0095B41948280C00E76424 /* box1.png in Resources */,
 				D41A0AD1160F154A004552AE /* Default-568h@2x.png in Resources */,
+				1B0095DF195028D700E76424 /* PromptBackground.png in Resources */,
 				1B0095CF19483B5900E76424 /* box14.png in Resources */,
 				D446FD6E16102124000ADA7B /* Default@2x.png in Resources */,
 				1B0095D21948491A00E76424 /* box16.png in Resources */,
@@ -1870,6 +1901,7 @@
 				1B0095CE19483B5900E76424 /* box13.png in Resources */,
 				1B0095BB19482FA500E76424 /* box4.png in Resources */,
 				1B0095C61948320000E76424 /* box10.png in Resources */,
+				1B0095ED195159BB00E76424 /* LocalRanking.json in Resources */,
 				1B0095BA19482FA500E76424 /* box3.png in Resources */,
 				1AFAF8BD16D35E4900DB1158 /* CloseSelected.png in Resources */,
 				1AFAF8BE16D35E4900DB1158 /* HelloWorld.png in Resources */,
@@ -1952,6 +1984,7 @@
 				15A3D9A41682F7F9002FB0C5 /* cpBB.c in Sources */,
 				15A3D9A51682F7F9002FB0C5 /* cpBBTree.c in Sources */,
 				15A3D9A61682F7F9002FB0C5 /* cpBody.c in Sources */,
+				1BCC8A5E1952C48400C80EE7 /* UserNameInputField.cpp in Sources */,
 				15A3D9A71682F7F9002FB0C5 /* cpCollision.c in Sources */,
 				15A3D9A81682F7F9002FB0C5 /* cpHashSet.c in Sources */,
 				15A3D9A91682F7F9002FB0C5 /* cpPolyShape.c in Sources */,
@@ -1975,6 +2008,7 @@
 				15A3DA381682F826002FB0C5 /* CCControlButtonLoader.cpp in Sources */,
 				15A3DA391682F826002FB0C5 /* CCControlLoader.cpp in Sources */,
 				15A3DA3A1682F826002FB0C5 /* CCData.cpp in Sources */,
+				1BCC8A551951D50A00C80EE7 /* RankingLayer.cpp in Sources */,
 				15A3DA3B1682F826002FB0C5 /* CCLabelBMFontLoader.cpp in Sources */,
 				15A3DA3C1682F826002FB0C5 /* CCLabelTTFLoader.cpp in Sources */,
 				15A3DA3D1682F826002FB0C5 /* CCLayerColorLoader.cpp in Sources */,
@@ -2017,7 +2051,9 @@
 				15A3DAEB1682F8A6002FB0C5 /* CDAudioManager.m in Sources */,
 				15A3DAEC1682F8A6002FB0C5 /* CDOpenALSupport.m in Sources */,
 				15A3DAED1682F8A6002FB0C5 /* CocosDenshion.m in Sources */,
+				1B0095DB194FF6DF00E76424 /* MenuLayer.cpp in Sources */,
 				15A3DAEE1682F8A6002FB0C5 /* SimpleAudioEngine.mm in Sources */,
+				1B0095E91951508E00E76424 /* RankingAccessor.cpp in Sources */,
 				15A3DAEF1682F8A6002FB0C5 /* SimpleAudioEngine_objc.m in Sources */,
 				1A27573F1697CF2B00504026 /* CCEditBoxImplAndroid.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
