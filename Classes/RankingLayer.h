@@ -18,14 +18,21 @@ USING_NS_CC;
 using namespace gui;
 
 class RankingLayer : public CCLayer {
-    
+    //JSON reader/writer
     RankingAccessor * _localRankingAccessor;
+    
+    //scroll view displaying the ranking items
     UIListView * _localRankingList;
     UILayer * _uiLayer;
     CCSize _screenSize;
+    
+    //local ranking / global ranking
+    //tab buttons
     CCMenu * _rankingTabs;
     CCMenuItemFont * _localRankingTab;
     CCMenuItemFont * _globalRankingTab;
+    
+    //back to menu button
     CCMenu * _bottomBtns;
     CCMenuItemFont * _backToMenuBtn;
 

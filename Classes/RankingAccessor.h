@@ -15,16 +15,23 @@
 #include "document.h"
 #include "stringbuffer.h"
 
+ 
+USING_NS_CC;
+using namespace rapidjson;
+
 class RankingAccessor {
-//    cocos2d::extension::Json * _rankings;
-    rapidjson::Document _rankings;
+    //rapidjson::Document class
+    //to hold the whole JSON content
+    Document _rankings;
+    //the absolute path of the json file
     const char * _fullJsonFilePath;
+    //count of ranking items
     int _rankingCount;
+    //whether the ranking file is parsed successfully
     bool _validRanking;
     
 public:
     RankingAccessor(const char * const fileName);
-    ~RankingAccessor();
     bool isValid() const;
     
     int getRankingCount() const;

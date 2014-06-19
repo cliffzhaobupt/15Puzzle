@@ -61,7 +61,8 @@ bool GameLayer::init() {
     _finishLabel->setPosition(ccp(300, 300));
     _prompt->addChild(_finishLabel, kFinishLabel);
     
-    //
+    //add "New Game" and "Ranking" buttons to the prompt
+    //they'll be displayed after user enter his name
     CCMenuItemFont::setFontSize(40);
     _playAgain = CCMenuItemFont::create("New Game", this, menu_selector(GameLayer::menuInPromptCallback));
     _playAgain->setColor(ccc3(255, 0, 0));
@@ -77,19 +78,20 @@ bool GameLayer::init() {
     _gameMenu->setVisible(false);
     _prompt->addChild(_gameMenu, kMenuInPrompt);
     
-    //create name input text field
+    //create name input text field in the prompt
     _nameInput = UserNameInputField::createUserNameInputField("Your name...", "Arial", 40);
     _nameInput->setColor(ccc3(0, 0, 0));
     _nameInput->setColorSpaceHolder(ccc3(150, 150, 150));
     _nameInput->setPosition(ccp(300, 225));
     _nameInput->setMaxLength(10);
     _nameInput->setMaxLengthEnabled(true);
-    //
+    //set prompt as "UserObject" to fix the position of it
+    //when the keyboard is shown / hidden
     _nameInput->setUserObject(_prompt);
     _prompt->addChild(_nameInput, kNameInput);
     
     
-    
+    //add "Edit Name" and "OK" button in the prompt
     _nameEneter = CCMenuItemFont::create("Edit Name", this, menu_selector(GameLayer::menuInPromptCallback));
     _nameEneter->setColor(ccc3(0, 255, 0));
     _nameEneter->setPosition(-100, 0);
@@ -140,6 +142,7 @@ bool GameLayer::init() {
     
     delete randomNumbers;
     
+    //initialize the JSON reader-writer
     _localRankingAccessor = RankingAccessor::createRankingAccessor("LocalRanking.json");
     
     //retain the CCArray for future use
@@ -261,6 +264,7 @@ void GameLayer::update(float dt) {
 
 }
 
+//reset game to play again
 void GameLayer::resetGame() {
 
     _gameFinished = false;
@@ -285,6 +289,7 @@ void GameLayer::resetGame() {
     delete randomNumbers;
 }
 
+//deal with the click of buttons in the prompt
 void GameLayer::menuInPromptCallback(CCObject *pSender) {
     CCNode * target = (CCNode *) pSender;
     switch (target->getTag()) {
@@ -303,10 +308,10 @@ void GameLayer::menuInPromptCallback(CCObject *pSender) {
             _nameMenu->setVisible(false);
             _gameMenu->setVisible(true);
             _nameInput->setVisible(false);
+            //insert current user name and time into the json file
             _localRankingAccessor->insertRankingItem(_nameInput->getString(), _timeToDisplay);
             break;
         
-            
         case kSeeRanking:
             CCScene * rankingScene = CCTransitionFade::create(1.0f, RankingLayer::scene());
             CCDirector::sharedDirector()->replaceScene(rankingScene);
@@ -314,6 +319,7 @@ void GameLayer::menuInPromptCallback(CCObject *pSender) {
     }
 }
 
+//restart button callback
 void GameLayer::restartBtnCallback(CCObject *pSender) {
     if (_gameFinished) return;
     resetGame();

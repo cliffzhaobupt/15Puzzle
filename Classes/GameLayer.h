@@ -32,31 +32,31 @@ class GameLayer : public CCLayer {
     CCLabelTTF * _finishLabel;
     //time label
     CCLabelTTF * _timeLabel;
-    
+    //prompt when game finishes
     CCSprite * _prompt;
-    
+    //play again button in the prompt
     CCMenuItemFont * _playAgain;
-    
+    //ranking button in the prompt
     CCMenuItemFont * _ranking;
-    
+    //CCMenu object containing "play again" and "ranking" buttons
     CCMenu * _gameMenu;
-    
+    //edit name button in the prompt
     CCMenuItemFont * _nameEneter;
+    //ok button in the prompt
     CCMenuItemFont * _nameOK;
-    
+    //CCMenu object containing "edit name" and "ok" buttons
     CCMenu * _nameMenu;
-    
-//    CCTextFieldTTF * _nameInput;
+    //user name input in the prompt
     UserNameInputField * _nameInput;
-    
+    //restart button at the upper part of the game
     CCMenu * _upperBtns;
     CCMenuItemFont * _restartBtn;
-    
+    //whether game has finished
     bool _gameFinished;
-    
+    //used to display seconds
     float _timeAdder;
     int _timeToDisplay;
-    
+    //Json writer/reader
     RankingAccessor * _localRankingAccessor;
 
     

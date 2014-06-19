@@ -8,9 +8,8 @@
 
 #include "RankingAccessor.h"
 
-USING_NS_CC;
-using namespace rapidjson;
-
+//constructor
+//parse json in the file
 RankingAccessor::RankingAccessor(const char * const fileName) {
     unsigned long jsonFileSize;
     const char * jsonText = (const char *) CCFileUtils::sharedFileUtils()->getFileData(fileName, "r+", & jsonFileSize);
@@ -25,6 +24,7 @@ RankingAccessor::RankingAccessor(const char * const fileName) {
     }
 }
 
+//static member function
 RankingAccessor * RankingAccessor::createRankingAccessor(const char *const fileName) {
     while (true) {
         RankingAccessor * raCreated = new RankingAccessor(fileName);
@@ -35,54 +35,55 @@ RankingAccessor * RankingAccessor::createRankingAccessor(const char *const fileN
     }
 }
 
-
-RankingAccessor::~RankingAccessor() {
-
-}
-
+//whether parsed successfully
 bool RankingAccessor::isValid() const {
     return _validRanking;
 }
 
+//how many ranking items in the ranking
 int RankingAccessor::getRankingCount() const {
     return _rankingCount;
 }
 
+//get user name of one item in the ranking
 const char * RankingAccessor::getUserAtIndex(unsigned int i) const {
     return _rankings[i]["user"].GetString();
 }
 
+//get time of one item in the ranking
 int RankingAccessor::getTimeAtIndex(unsigned int i) const {
     return _rankings[i]["time"].GetInt();
 }
 
+//insert one item into the ranking
 void RankingAccessor::insertRankingItem(const char *name, int time) {
     Document newRankings;
+    newRankings.SetArray();
     
     Document::AllocatorType & allocator = newRankings.GetAllocator();
     
-    Value root(kArrayType);
     bool checkWhetherInsert = true;
     for (unsigned int i = 0, size = getRankingCount() ; i < size ; ++ i) {
         if (checkWhetherInsert) {
             if (time > getTimeAtIndex(i)) {
-                root.PushBack(_rankings[i], allocator);
+                newRankings.PushBack(_rankings[i], allocator);
             } else {
-                Value newItem(kObjectType);
+                Value newItem;
+                newItem.SetObject();
                 newItem.AddMember("user", name, allocator);
                 newItem.AddMember("time", time, allocator);
-                root.PushBack(newItem, allocator);
-                root.PushBack(_rankings[i], allocator);
+                newRankings.PushBack(newItem, allocator);
+                newRankings.PushBack(_rankings[i], allocator);
                 checkWhetherInsert = false;
             }
         } else {
-            root.PushBack(_rankings[i], allocator);
+            newRankings.PushBack(_rankings[i], allocator);
         }
     }
     
     StringBuffer buffer;
     Writer<StringBuffer> writer(buffer);
-    root.Accept(writer);
+    newRankings.Accept(writer);
     const char * newRankingsJson = buffer.GetString();
     FILE * file = fopen(_fullJsonFilePath, "w+");
     fputs(newRankingsJson, file);
