@@ -52,7 +52,7 @@ bool GameLayer::init() {
     
     //create prompt
     _prompt = CCSprite::create("PromptBackground.png");
-    _prompt->setPosition(ccp(_screenSize.width * 0.5f, _screenSize.height * 0.5f + 220));
+    _prompt->setPosition(ccp(_screenSize.width * 0.5f, _screenSize.height * 0.5f));
     _prompt->setVisible(false);
     
     //create game finish CCLabelTTF
@@ -226,9 +226,17 @@ void GameLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *event) {
                             if (finish) {
                                 _finishLabel->setString(CCString::createWithFormat("Clear in %d seconds", _timeToDisplay)->getCString());
 
-                                CCString textInInput = CCString(_nameInput->getString());
-                                if (textInInput.length() == 0)
-                                    _nameInput->openIME();
+                                if (_nameInput->getCharCount() == 0) {
+                                    std::string nameCacheStr = CCUserDefault::sharedUserDefault()->getStringForKey("user_name_cache");
+                                    CCLog("user_name_cache: %s", nameCacheStr.c_str());
+                                    if (nameCacheStr.size() > 0) {
+                                        _nameInput->setString(nameCacheStr.c_str());
+                                    } else {
+                                        _nameInput->openIME();
+                                    }
+                                }
+                                
+                                
                                 
                                 _gameFinished = true;
                                 _prompt->setVisible(true);
@@ -308,6 +316,7 @@ void GameLayer::menuInPromptCallback(CCObject *pSender) {
             _nameMenu->setVisible(false);
             _gameMenu->setVisible(true);
             _nameInput->setVisible(false);
+            CCUserDefault::sharedUserDefault()->setStringForKey("user_name_cache", _nameInput->getString());
             //insert current user name and time into the json file
             _localRankingAccessor->insertRankingItem(_nameInput->getString(), _timeToDisplay);
             break;
