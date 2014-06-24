@@ -7,7 +7,6 @@
 //
 
 #include "GameLayer.h"
-#include "PuzzleBoxSprite.h"
 #include <algorithm>
 
 #define EASY_GAME
@@ -47,8 +46,6 @@ bool GameLayer::init() {
     _screenSize = CCDirector::sharedDirector()->getWinSize();
     //create CCArray by capacity
     _boxes = CCArray::createWithCapacity(15);
-    
-    
     
     //create prompt
     _prompt = CCSprite::create("PromptBackground.png");
@@ -106,14 +103,16 @@ bool GameLayer::init() {
     
     this->addChild(_prompt, kPrompt);
     
-    //create restart button
-    _restartBtn = CCMenuItemFont::create("Restart Game", this, menu_selector(GameLayer::restartBtnCallback));
+    //create Restart button and Back to Menu button
+    _restartBtn = CCMenuItemFont::create("Restart Game", this, menu_selector(GameLayer::upperBtnsCallback));
     _restartBtn->setFontSizeObj(40);
-    _restartBtn->setAnchorPoint(ccp(0, 0));
-    _restartBtn->setPosition(40, 20);
-    _upperBtns = CCMenu::createWithItem(_restartBtn);
-    _upperBtns->setAnchorPoint(ccp(0, 0));
-    _upperBtns->setPosition(ccp(0, _screenSize.height * 0.5 + 300));
+    _mainMenuBtn = CCMenuItemFont::create("Back to Menu", this, menu_selector(GameLayer::upperBtnsCallback));
+    _mainMenuBtn->setFontSizeObj(40);
+    _upperBtns = CCMenu::create();
+    _upperBtns->addChild(_restartBtn);
+    _upperBtns->addChild(_mainMenuBtn);
+    _upperBtns->alignItemsHorizontallyWithPadding(100);
+    _upperBtns->setPosition(ccp(_screenSize.width * 0.5f , _screenSize.height * 0.5 + 340));
     this->addChild(_upperBtns);
     
     //create time label
@@ -329,15 +328,20 @@ void GameLayer::menuInPromptCallback(CCObject *pSender) {
     }
 }
 
-//restart button callback
-void GameLayer::restartBtnCallback(CCObject *pSender) {
+//Restart button and Back to Menu button callback
+void GameLayer::upperBtnsCallback(CCObject *pSender) {
     if (_gameFinished) return;
-    resetGame();
+    if (pSender->isEqual(_restartBtn)) {
+        resetGame();
+    } else {
+        CCScene * menuScene = CCTransitionFade::create(1.0f, MenuLayer::scene());
+        CCDirector::sharedDirector()->replaceScene(menuScene);
+    }
+
 }
 
 GameLayer::~GameLayer() {
     CC_SAFE_RELEASE(_boxes);
-    
     CC_SAFE_RELEASE(_localRankingAccessor);
 }
 

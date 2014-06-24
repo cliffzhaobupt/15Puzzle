@@ -14,6 +14,8 @@
 #include "RankingLayer.h"
 #include "cocos-ext.h"
 #include "UserNameInputField.h"
+#include "PuzzleBoxSprite.h"
+#include "MenuLayer.h"
 
 using namespace cocos2d;
 
@@ -51,6 +53,7 @@ class GameLayer : public CCLayer {
     //restart button at the upper part of the game
     CCMenu * _upperBtns;
     CCMenuItemFont * _restartBtn;
+    CCMenuItemFont * _mainMenuBtn;
     //whether game has finished
     bool _gameFinished;
     //used to display seconds
@@ -71,7 +74,7 @@ public:
     void resetGame();
     std::vector<int> * generateRandomNumbers();
     void menuInPromptCallback(CCObject * pSender);
-    void restartBtnCallback(CCObject * pSender);
+    void upperBtnsCallback(CCObject * pSender);
 };
 
 #endif /* defined(___5Puzzle__GameLayer__) */

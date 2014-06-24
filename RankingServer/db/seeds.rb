@@ -7,9 +7,9 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 Ranking.destroy_all
-(200..220).each do |time|
+100.step(1500, 100) do |time|
   Ranking.create(
-    name: (time % 2 == 0) ? 'cliff' : 'kim',
+    name: (time % 200 == 0) ? 'tom' : 'cliff',
     time: time
     )
 end
