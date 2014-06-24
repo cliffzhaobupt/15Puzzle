@@ -9,7 +9,10 @@
 #include "RankingLayer.h"
 
 RankingLayer::~RankingLayer() {
-    delete _localRankingAccessor;
+//    delete _rankingAccessor;
+    CC_SAFE_RELEASE(_globalRankingList);
+    CC_SAFE_RELEASE(_localRankingList);
+    CC_SAFE_RELEASE(_rankingAccessor);
 }
 
 bool RankingLayer::init() {
@@ -19,18 +22,19 @@ bool RankingLayer::init() {
     //get current screen size
     _screenSize = CCDirector::sharedDirector()->getWinSize();
     //initialize json reader / writer
-    _localRankingAccessor = RankingAccessor::createRankingAccessor("LocalRanking.json");
+    _rankingAccessor = RankingAccessor::createRankingAccessor("LocalRanking.json");
+    _rankingAccessor->retain();
     //initialize scroll view
     //UIListView in UILayer
     _uiLayer = UILayer::create();
     _localRankingList = UIListView::create();
     //add all the ranking items as UILabel to UIListView
-    for (int i = 0, size = _localRankingAccessor->getRankingCount() ; i < size ; ++ i) {
+    for (int i = 0, size = _rankingAccessor->getLocalRankingCount() ; i < size ; ++ i) {
         //create UILabel for one item
         UILabel * rankingLabel = UILabel::create();
         CCString * text = CCString::createWithFormat("%d  -  %s  -  %ds",
-            (i + 1), _localRankingAccessor->getUserAtIndex(i),
-                                   _localRankingAccessor->getTimeAtIndex(i));
+            (i + 1), _rankingAccessor->getLocalUserAtIndex(i),
+                                   _rankingAccessor->getLocalTimeAtIndex(i));
         rankingLabel->setText(text->getCString());
         rankingLabel->setFontSize(40);
         rankingLabel->setFontName("Marker Felt");
@@ -39,15 +43,22 @@ bool RankingLayer::init() {
 
     }
     //set UIListView options
-    _localRankingList->setGravity(LISTVIEW_GRAVITY_CENTER_HORIZONTAL);
-    _localRankingList->setSize(CCSize(600, 500));
-    _localRankingList->setItemsMargin(10);
-    _localRankingList->setPosition(ccp(_screenSize.width * 0.5, _screenSize.height * 0.5));
-    _localRankingList->setAnchorPoint(ccp(0.5, 0.5));
-    //add UIListView to UILayer
+    setOptionsForUIListView(_localRankingList);
     _uiLayer->addWidget(_localRankingList);
-    
     this->addChild(_uiLayer);
+    
+//    _uiLayer->setZOrder(kUpperZOrder);
+//    this->addChild(_uiLayer, kUpperZOrder);
+    //
+    _globalRankingList = UIListView::create();
+    
+    //set UIListView options
+    setOptionsForUIListView(_globalRankingList);
+//    _globalUILayer->setVisible(false);
+    
+//    _globalUILayer->setZOrder(kLowerZOrder);
+//    this->addChild(_globalUILayer, kLowerZOrder);
+    
     
     //create Local Ranking and Global Ranking buttons
     CCMenuItemFont::setFontSize(40);
@@ -69,6 +80,12 @@ bool RankingLayer::init() {
     _bottomBtns->setPosition(0, _screenSize.height * 0.5 - 330);
     this->addChild(_bottomBtns);
     
+    //
+    _loadingIcon = CCSprite::create("loading.gif");
+    _loadingIcon->setPosition(ccp(_screenSize.width * 0.5f, _screenSize.height * 0.5f));
+    _loadingIcon->setVisible(false);
+    this->addChild(_loadingIcon, 3);
+    
     return true;
 }
 
@@ -84,8 +101,29 @@ void RankingLayer::rankingTabHandler(CCObject * pSender) {
     CCMenuItemFont * target = (CCMenuItemFont *) pSender;
     if (target == _localRankingTab) {
         _globalRankingTab->setColor(ccc3(255, 255, 255));
+        if(_uiLayer->getWidgetByTag(0) == _localRankingList)
+            return;
+        _uiLayer->removeWidget(_globalRankingList);
+        _uiLayer->addWidget(_localRankingList);
+        _loadingIcon->setVisible(false);
+        
+        
     } else {
         _localRankingTab->setColor(ccc3(255, 255, 255));
+        if(_uiLayer->getWidgetByTag(0) == _globalRankingList)
+            return;
+        _uiLayer->removeWidget(_localRankingList);
+        _uiLayer->addWidget(_globalRankingList);
+        
+//        CCLog("global count: %d", _rankingAccessor->getGlobalRankingCount());
+        if ((_rankingAccessor->getGlobalRankingCount() == 0) &&
+            (! _rankingAccessor->isWaitingForResponse())) {
+            _rankingAccessor->getRankingsFromServer(_loadingIcon, _globalRankingList);
+        }
+        
+        if (_rankingAccessor->isWaitingForResponse()) {
+            _loadingIcon->setVisible(true);
+        }
     }
     target->setColor(ccc3(150, 0, 0));
 }
@@ -93,5 +131,18 @@ void RankingLayer::rankingTabHandler(CCObject * pSender) {
 //Back to Menu button callback
 void RankingLayer::backToMenuHandler(CCObject *pSender) {
     CCScene * menuScene = CCTransitionFade::create(1.0f, MenuLayer::scene());
+    _rankingAccessor->clearUnfinishedRequests();
     CCDirector::sharedDirector()->replaceScene(menuScene);
+}
+
+//
+void RankingLayer::setOptionsForUIListView(UIListView *uiListView) const {
+    uiListView->setGravity(LISTVIEW_GRAVITY_CENTER_HORIZONTAL);
+    uiListView->setSize(CCSize(600, 500));
+    uiListView->setAnchorPoint(ccp(0.5, 0.5));
+    uiListView->setPosition(ccp(_screenSize.width * 0.5, _screenSize.height * 0.5));
+    uiListView->setItemsMargin(10);
+    uiListView->setTag(0);
+    
+    uiListView->retain();
 }

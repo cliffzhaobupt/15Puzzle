@@ -17,9 +17,11 @@
 USING_NS_CC;
 using namespace gui;
 
+//enum UILayerZOrder {kLowerZOrder, kUpperZOrder};
+
 class RankingLayer : public CCLayer {
     //JSON reader/writer
-    RankingAccessor * _localRankingAccessor;
+    RankingAccessor * _rankingAccessor;
     
     //scroll view displaying the ranking items
     UIListView * _localRankingList;
@@ -35,6 +37,12 @@ class RankingLayer : public CCLayer {
     //back to menu button
     CCMenu * _bottomBtns;
     CCMenuItemFont * _backToMenuBtn;
+    
+    CCSprite * _loadingIcon;
+    
+    UIListView * _globalRankingList;
+//    UILayer * _globalUILayer;
+
 
 public:
     virtual bool init();
@@ -45,6 +53,9 @@ public:
     
     void rankingTabHandler(CCObject * pSender);
     void backToMenuHandler(CCObject * pSender);
+    
+    void setOptionsForUIListView (UIListView * uiListView) const;
+
 };
 
 #endif /* defined(___5Puzzle__RankingLayer__) */

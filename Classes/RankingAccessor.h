@@ -10,6 +10,11 @@
 #define ___5Puzzle__RankingAccessor__
 
 #include "cocos2d.h"
+#include "CocosGUI.h"
+//#include "cocos-ext.h"
+#include "HttpClient.h"
+#include "HttpRequest.h"
+#include "HttpResponse.h"
 #include "prettywriter.h"
 #include "reader.h"
 #include "document.h"
@@ -17,31 +22,65 @@
 
  
 USING_NS_CC;
+USING_NS_CC_EXT;
+using namespace gui;
 using namespace rapidjson;
 
-class RankingAccessor {
+class RankingAccessor : public CCObject {
     //rapidjson::Document class
     //to hold the whole JSON content
-    Document _rankings;
+    Document _localRankings;
     //the absolute path of the json file
     const char * _fullJsonFilePath;
     //count of ranking items
-    int _rankingCount;
+    int _localRankingCount;
     //whether the ranking file is parsed successfully
-    bool _validRanking;
+    bool _localRankingValid;
+    
+
+    
+    Document _globalRankings;
+    
+    int _globalRankingCount;
+    
+    CCSprite * _loadingIcon;
+    
+    UIListView * _globalList;
+    
+    bool _waitingForResponse;
+    
+    bool _destroyClient;
+    
+    CCHttpClient * _clientInClass;
+    CCHttpRequest * _getRequest;
+    CCHttpRequest * _postRequest;
     
 public:
     RankingAccessor(const char * const fileName);
-    bool isValid() const;
+    ~RankingAccessor();
+    bool isLocalRankingValid() const;
     
-    int getRankingCount() const;
-    const char * getUserAtIndex(unsigned int i) const;
-    int getTimeAtIndex(unsigned int i) const;
+    int getLocalRankingCount() const;
+    const char * getLocalUserAtIndex(unsigned int i) const;
+    int getLocalTimeAtIndex(unsigned int i) const;
     
     void insertRankingItem(const char * name, int time);
     
     static RankingAccessor * createRankingAccessor(const char * const fileName);
     
+    void getRankingsFromServer(CCSprite * loadingIcon, UIListView * globalList);
+    void callbackForGetRankingsFromServer(CCNode * node, CCObject * obj);
+//    void callbackForAddRankingToServer(CCNode * node, CCObject * obj);
+
+
+    
+    int getGlobalRankingCount() const;
+    const char * getGlobalUserAtIndex(unsigned int i) const;
+    int getGlobalTimeAtIndex(unsigned int i) const;
+    bool isWaitingForResponse();
+
+    void clearUnfinishedRequests();
+    void blankCallback(CCNode * node, CCObject * obj);
 };
 
 #endif /* defined(___5Puzzle__RankingAccessor__) */

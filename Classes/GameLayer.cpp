@@ -144,6 +144,7 @@ bool GameLayer::init() {
     
     //initialize the JSON reader-writer
     _localRankingAccessor = RankingAccessor::createRankingAccessor("LocalRanking.json");
+    _localRankingAccessor->retain();
     
     //retain the CCArray for future use
     _boxes->retain();
@@ -336,6 +337,7 @@ void GameLayer::restartBtnCallback(CCObject *pSender) {
 
 GameLayer::~GameLayer() {
     CC_SAFE_RELEASE(_boxes);
-    delete _localRankingAccessor;
+    
+    CC_SAFE_RELEASE(_localRankingAccessor);
 }
 
