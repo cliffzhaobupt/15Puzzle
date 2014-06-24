@@ -126,6 +126,11 @@ bool GameLayer::init() {
     //generate random numbers
     std::vector<int> * randomNumbers = generateRandomNumbers();
     
+    //set frame cache for boxes
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("boxes.plist");
+    _boxesBatchNode = CCSpriteBatchNode::create("boxes.png");
+    this->addChild(_boxesBatchNode);
+    
     //add 16 PuzzleBoxSprites to current GameLayer
     for (int i = 0 ; i < 16 ; ++i) {
         PuzzleBoxSprite * box = PuzzleBoxSprite::initPuzzleBoxSpriteWithId((*randomNumbers)[i], _screenSize);
@@ -134,7 +139,7 @@ bool GameLayer::init() {
             _screenSize.width * 0.5 +  box->getContentSize().width * timesArr[i % 4],
             _screenSize.height * 0.5 + box->getContentSize().width * timesArr[3 - i / 4]));
         
-        this->addChild(box, kPuzzleBox, (*randomNumbers)[i]);
+        _boxesBatchNode->addChild(box, kPuzzleBox, (*randomNumbers)[i]);
         //save puzzle box sprites to CCArray
         _boxes->addObject(box);
     }

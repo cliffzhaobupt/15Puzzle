@@ -11,7 +11,6 @@
 
 #include "cocos2d.h"
 #include "CocosGUI.h"
-//#include "cocos-ext.h"
 #include "HttpClient.h"
 #include "HttpRequest.h"
 #include "HttpResponse.h"
@@ -70,9 +69,6 @@ public:
     
     void getRankingsFromServer(CCSprite * loadingIcon, UIListView * globalList);
     void callbackForGetRankingsFromServer(CCNode * node, CCObject * obj);
-//    void callbackForAddRankingToServer(CCNode * node, CCObject * obj);
-
-
     
     int getGlobalRankingCount() const;
     const char * getGlobalUserAtIndex(unsigned int i) const;

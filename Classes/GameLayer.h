@@ -61,6 +61,8 @@ class GameLayer : public CCLayer {
     int _timeToDisplay;
     //Json writer/reader
     RankingAccessor * _localRankingAccessor;
+    //sprite batch node for boxes
+    CCSpriteBatchNode * _boxesBatchNode;
 
     
 public:

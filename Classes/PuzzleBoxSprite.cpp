@@ -11,12 +11,12 @@
 //generate a puzzle box sprite object by actual id and screen size
 PuzzleBoxSprite * PuzzleBoxSprite::initPuzzleBoxSpriteWithId(int id, const CCSize & screenSize) {
     //generate filename by actual id
-    char filename [10];
-    sprintf(filename, "box%d.png", id);
+    char frameName [10];
+    sprintf(frameName, "box%d.png", id);
     //use new keyword to create one instance
-    //and use initWithFile() funcation to initialize CCSprite
+    //and use initWithSpriteFrameName() funcation to initialize CCSprite
     PuzzleBoxSprite * newPBS = new PuzzleBoxSprite;
-    newPBS->initWithFile(filename);
+    newPBS->initWithSpriteFrameName(frameName);
     newPBS->setId(id);
     //calculate the original position of puzzle box
     const float timesArr[] = {-1.5, -0.5, 0.5, 1.5};
