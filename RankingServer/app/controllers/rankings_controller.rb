@@ -2,6 +2,7 @@ class RankingsController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
   def get
+    sleep 2
     ranking_items = Ranking.select(:id, :time, :name).order("time")
     render json: ranking_items
   end

@@ -81,7 +81,8 @@ bool RankingLayer::init() {
     this->addChild(_bottomBtns);
     
     //
-    _loadingIcon = CCSprite::create("loading.gif");
+    _loadingIcon = CCSprite::create("loading.png");
+    _loadingIcon->runAction(CCRepeatForever::create(CCRotateBy::create(2, 360)));
     _loadingIcon->setPosition(ccp(_screenSize.width * 0.5f, _screenSize.height * 0.5f));
     _loadingIcon->setVisible(false);
     this->addChild(_loadingIcon, 3);

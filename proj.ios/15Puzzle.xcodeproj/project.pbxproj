@@ -193,6 +193,7 @@
 		1B8170C11958151E005B9255 /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = 1B8170C01958151E005B9255 /* loading.gif */; };
 		1BCC8A551951D50A00C80EE7 /* RankingLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1BCC8A531951D50A00C80EE7 /* RankingLayer.cpp */; };
 		1BCC8A5E1952C48400C80EE7 /* UserNameInputField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1BCC8A5C1952C48400C80EE7 /* UserNameInputField.cpp */; };
+		1BD5C79E1959B8ED00BB48D4 /* loading.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BD5C79D1959B8ED00BB48D4 /* loading.png */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765A40DF7441C002DB57D /* CoreGraphics.framework */; };
@@ -643,6 +644,7 @@
 		1BCC8A541951D50A00C80EE7 /* RankingLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RankingLayer.h; path = ../Classes/RankingLayer.h; sourceTree = "<group>"; };
 		1BCC8A5C1952C48400C80EE7 /* UserNameInputField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UserNameInputField.cpp; path = ../Classes/UserNameInputField.cpp; sourceTree = "<group>"; };
 		1BCC8A5D1952C48400C80EE7 /* UserNameInputField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserNameInputField.h; path = ../Classes/UserNameInputField.h; sourceTree = "<group>"; };
+		1BD5C79D1959B8ED00BB48D4 /* loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loading.png; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* 15Puzzle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 15Puzzle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -1776,6 +1778,7 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1BD5C79D1959B8ED00BB48D4 /* loading.png */,
 				1B8170C01958151E005B9255 /* loading.gif */,
 				1B0095EC195159BB00E76424 /* LocalRanking.json */,
 				1B0095DE195028D700E76424 /* PromptBackground.png */,
@@ -1908,6 +1911,7 @@
 				1B0095ED195159BB00E76424 /* LocalRanking.json in Resources */,
 				1B0095BA19482FA500E76424 /* box3.png in Resources */,
 				1AFAF8BD16D35E4900DB1158 /* CloseSelected.png in Resources */,
+				1BD5C79E1959B8ED00BB48D4 /* loading.png in Resources */,
 				1AFAF8BE16D35E4900DB1158 /* HelloWorld.png in Resources */,
 				1B0095CC19483B5900E76424 /* box11.png in Resources */,
 				1B0095D019483B5900E76424 /* box15.png in Resources */,

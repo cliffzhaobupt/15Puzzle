@@ -137,12 +137,6 @@ void RankingAccessor::getRankingsFromServer(CCSprite * loadingIcon, UIListView *
 }
 
 void RankingAccessor::callbackForGetRankingsFromServer(CCNode *node, CCObject *obj) {
-//    CCHttpClient * httpClient = (CCHttpClient *) node;
-//    if(httpClient != _clientInClass || _clientInClass == NULL || node == NULL) return;
-//    if (! node->isEqual(_clientInClass) ) {
-//        return;
-//    }
-    
     if (_loadingIcon) {
         _loadingIcon->setVisible(false);
     }
