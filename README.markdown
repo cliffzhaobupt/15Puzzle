@@ -42,6 +42,8 @@ Later, user can select to start another game, or to check the ranking
 (For debugging, the game was set to be very simple...)
 
 ## Week 3
+The server side code is saved in the directory called "RankingServer"
+
 <img src="https://github.com/cliffzhaobupt/15Puzzle/raw/master/SampleGIF/global_ranking.gif"/>
 
 In the ranking scene, user can touch Global Ranking tab to see global ranking.
