@@ -47,18 +47,11 @@ bool RankingLayer::init() {
     _uiLayer->addWidget(_localRankingList);
     this->addChild(_uiLayer);
     
-//    _uiLayer->setZOrder(kUpperZOrder);
-//    this->addChild(_uiLayer, kUpperZOrder);
-    //
+    //create scroll view to contain global ranking items
     _globalRankingList = UIListView::create();
     
     //set UIListView options
     setOptionsForUIListView(_globalRankingList);
-//    _globalUILayer->setVisible(false);
-    
-//    _globalUILayer->setZOrder(kLowerZOrder);
-//    this->addChild(_globalUILayer, kLowerZOrder);
-    
     
     //create Local Ranking and Global Ranking buttons
     CCMenuItemFont::setFontSize(40);
@@ -80,12 +73,22 @@ bool RankingLayer::init() {
     _bottomBtns->setPosition(0, _screenSize.height * 0.5 - 330);
     this->addChild(_bottomBtns);
     
-    //
+    //create loading icon
     _loadingIcon = CCSprite::create("loading.png");
     _loadingIcon->runAction(CCRepeatForever::create(CCRotateBy::create(2, 360)));
-    _loadingIcon->setPosition(ccp(_screenSize.width * 0.5f, _screenSize.height * 0.5f));
     _loadingIcon->setVisible(false);
-    this->addChild(_loadingIcon, 3);
+    
+    //create network error icon
+    _networkErrorIcon = CCLabelTTF::create("Network Error", "Marker Felt", 80);
+    _networkErrorIcon->setVisible(false);
+    
+    //create container sprite for icons in global ranking
+    _globalIconsHolder = CCSprite::create();
+    _globalIconsHolder->setPosition(ccp(_screenSize.width * 0.5f, _screenSize.height * 0.5f));
+    _globalIconsHolder->addChild(_loadingIcon);
+    _globalIconsHolder->addChild(_networkErrorIcon);
+    _globalIconsHolder->setVisible(false);
+    this->addChild(_globalIconsHolder, kGlobalIconsHolderZOrder);
     
     return true;
 }
@@ -100,31 +103,33 @@ CCScene * RankingLayer::scene() {
 //click callback function
 void RankingLayer::rankingTabHandler(CCObject * pSender) {
     CCMenuItemFont * target = (CCMenuItemFont *) pSender;
+    //callback for local ranking button clicked
     if (target == _localRankingTab) {
         _globalRankingTab->setColor(ccc3(255, 255, 255));
-        if(_uiLayer->getWidgetByTag(0) == _localRankingList)
+        //already displaying local rankings
+        if(_uiLayer->getWidgetByTag(kUIScrollListWidgetTag) == _localRankingList)
             return;
+        //remove global ranking view from the UILayer
         _uiLayer->removeWidget(_globalRankingList);
+        //add local ranking view to the UILayer
         _uiLayer->addWidget(_localRankingList);
-        _loadingIcon->setVisible(false);
-        
-        
+        //hide the loading icon and the network error icon
+        _globalIconsHolder->setVisible(false);
+
+    //callback for global ranking button clicked
     } else {
         _localRankingTab->setColor(ccc3(255, 255, 255));
-        if(_uiLayer->getWidgetByTag(0) == _globalRankingList)
+        if(_uiLayer->getWidgetByTag(kUIScrollListWidgetTag) == _globalRankingList)
             return;
         _uiLayer->removeWidget(_localRankingList);
         _uiLayer->addWidget(_globalRankingList);
         
-//        CCLog("global count: %d", _rankingAccessor->getGlobalRankingCount());
         if ((_rankingAccessor->getGlobalRankingCount() == 0) &&
             (! _rankingAccessor->isWaitingForResponse())) {
-            _rankingAccessor->getRankingsFromServer(_loadingIcon, _globalRankingList);
+            _rankingAccessor->getRankingsFromServer(_loadingIcon,  _networkErrorIcon, _globalRankingList);
         }
         
-        if (_rankingAccessor->isWaitingForResponse()) {
-            _loadingIcon->setVisible(true);
-        }
+        _globalIconsHolder->setVisible(true);
     }
     target->setColor(ccc3(150, 0, 0));
 }
@@ -136,14 +141,14 @@ void RankingLayer::backToMenuHandler(CCObject *pSender) {
     CCDirector::sharedDirector()->replaceScene(menuScene);
 }
 
-//
+//set the format of UIListView to display rankings
 void RankingLayer::setOptionsForUIListView(UIListView *uiListView) const {
     uiListView->setGravity(LISTVIEW_GRAVITY_CENTER_HORIZONTAL);
     uiListView->setSize(CCSize(600, 500));
     uiListView->setAnchorPoint(ccp(0.5, 0.5));
     uiListView->setPosition(ccp(_screenSize.width * 0.5, _screenSize.height * 0.5));
     uiListView->setItemsMargin(10);
-    uiListView->setTag(0);
+    uiListView->setTag(kUIScrollListWidgetTag);
     
     uiListView->retain();
 }

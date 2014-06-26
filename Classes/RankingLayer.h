@@ -17,17 +17,22 @@
 USING_NS_CC;
 using namespace gui;
 
-//enum UILayerZOrder {kLowerZOrder, kUpperZOrder};
+enum {kUIScrollListWidgetTag, kGlobalIconsHolderZOrder};
 
 class RankingLayer : public CCLayer {
+    
+    CCSize _screenSize;
+    
     //JSON reader/writer
     RankingAccessor * _rankingAccessor;
     
-    //scroll view displaying the ranking items
+    //scroll view displaying the local ranking items
     UIListView * _localRankingList;
+    //scroll view displaying the global ranking items
+    UIListView * _globalRankingList;
+    //UILayer to contain the scroll views
     UILayer * _uiLayer;
-    CCSize _screenSize;
-    
+
     //local ranking / global ranking
     //tab buttons
     CCMenu * _rankingTabs;
@@ -38,10 +43,14 @@ class RankingLayer : public CCLayer {
     CCMenu * _bottomBtns;
     CCMenuItemFont * _backToMenuBtn;
     
+    //loading icon and network error icon
+    //in global ranking
     CCSprite * _loadingIcon;
+    CCLabelTTF * _networkErrorIcon;
+    CCSprite * _globalIconsHolder;
     
-    UIListView * _globalRankingList;
-//    UILayer * _globalUILayer;
+
+
 
 
 public:

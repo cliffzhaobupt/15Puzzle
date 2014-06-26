@@ -25,9 +25,12 @@ USING_NS_CC_EXT;
 using namespace gui;
 using namespace rapidjson;
 
+#define GET_RANKING_URL "http://0.0.0.0:3000/rankings/get"
+#define POST_ADD_RANKING_URL "http://0.0.0.0:3000/rankings/add"
+
 class RankingAccessor : public CCObject {
     //rapidjson::Document class
-    //to hold the whole JSON content
+    //to hold local ranking
     Document _localRankings;
     //the absolute path of the json file
     const char * _fullJsonFilePath;
@@ -36,23 +39,24 @@ class RankingAccessor : public CCObject {
     //whether the ranking file is parsed successfully
     bool _localRankingValid;
     
-
-    
+    //document to hold global ranking
     Document _globalRankings;
-    
+    //count of global ranking
     int _globalRankingCount;
-    
+    //loading icon
     CCSprite * _loadingIcon;
-    
+    //network error icon
+    CCSprite * _networkErrorIcon;
+    //UIListView of global ranking list
     UIListView * _globalList;
     
+    //is waiting for response to come
     bool _waitingForResponse;
     
-    bool _destroyClient;
-    
-    CCHttpClient * _clientInClass;
-    CCHttpRequest * _getRequest;
-    CCHttpRequest * _postRequest;
+    //http objects
+    CCHttpClient * _client;
+    CCHttpRequest * _getRankingRequest;
+    CCHttpRequest * _addRankingRequest;
     
 public:
     RankingAccessor(const char * const fileName);
@@ -67,7 +71,7 @@ public:
     
     static RankingAccessor * createRankingAccessor(const char * const fileName);
     
-    void getRankingsFromServer(CCSprite * loadingIcon, UIListView * globalList);
+    void getRankingsFromServer(CCSprite * loadingIcon, CCSprite * networkError, UIListView * globalList);
     void callbackForGetRankingsFromServer(CCNode * node, CCObject * obj);
     
     int getGlobalRankingCount() const;

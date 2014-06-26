@@ -10,11 +10,10 @@
 
 //constructor
 //parse json in the file
+//set client and request objects
 RankingAccessor::RankingAccessor(const char * const fileName) :
 _globalRankingCount(0),
-_waitingForResponse(false),
-_loadingIcon(NULL),
-_destroyClient(false)
+_waitingForResponse(false)
 {
     unsigned long jsonFileSize;
     const char * jsonText = (const char *) CCFileUtils::sharedFileUtils()->getFileData(fileName, "r+", & jsonFileSize);
@@ -28,15 +27,21 @@ _destroyClient(false)
         _localRankingValid = false;
     }
     
-    _clientInClass = CCHttpClient::getInstance();
-    _getRequest = new CCHttpRequest;
-    _getRequest->setRequestType(CCHttpRequest::kHttpGet);
-    _getRequest->setUrl("http://0.0.0.0:3000/rankings/get");
-    _getRequest->setResponseCallback(this, callfuncND_selector(RankingAccessor::callbackForGetRankingsFromServer));
+    //initialize CCHttpClient object
+    _client = CCHttpClient::getInstance();
     
-    _postRequest = new CCHttpRequest;
-    _postRequest->setRequestType(CCHttpRequest::kHttpPost);
-    _postRequest->setUrl("http://0.0.0.0:3000/rankings/add");
+    //initialize CCHttpRequest object
+    //for the GET request of getting global ranking
+    _getRankingRequest = new CCHttpRequest;
+    _getRankingRequest->setRequestType(CCHttpRequest::kHttpGet);
+    _getRankingRequest->setUrl(GET_RANKING_URL);
+    _getRankingRequest->setResponseCallback(this, callfuncND_selector(RankingAccessor::callbackForGetRankingsFromServer));
+    
+    //initialize CHttpRequest object
+    //for the POST request of adding ranking to global ranking
+    _addRankingRequest = new CCHttpRequest;
+    _addRankingRequest->setRequestType(CCHttpRequest::kHttpPost);
+    _addRankingRequest->setUrl(POST_ADD_RANKING_URL);
     
 }
 
@@ -74,6 +79,7 @@ int RankingAccessor::getLocalTimeAtIndex(unsigned int i) const {
 
 //insert one item into the ranking
 void RankingAccessor::insertRankingItem(const char *name, int time) {
+    //save new ranking to local json file
     Document newRankings;
     newRankings.SetArray();
     
@@ -114,39 +120,60 @@ void RankingAccessor::insertRankingItem(const char *name, int time) {
         }
     }
     
+    //generate post data
+    //send add ranking POST request to the server
     CCString * requestDataStr = CCString::createWithFormat("name=%s&time=%d", name, time);
-    _postRequest->setRequestData(requestDataStr->getCString(), requestDataStr->length());
-    _clientInClass->send(_postRequest);
+    _addRankingRequest->setRequestData(requestDataStr->getCString(), requestDataStr->length());
+    _client->send(_addRankingRequest);
 
 }
 
-void RankingAccessor::getRankingsFromServer(CCSprite * loadingIcon, UIListView * globalList) {
+//send GET request to acquire the ranking from server
+void RankingAccessor::getRankingsFromServer(CCSprite * loadingIcon, CCSprite * networkError, UIListView * globalList) {
+    //send request
+    _client->setTimeoutForConnect(10);
+    _client->send(_getRankingRequest);
     
-//    CCHttpClient * httpClient = CCHttpClient::getInstance();
-
-    _clientInClass->setTimeoutForConnect(10);
-    _clientInClass->send(_getRequest);
-    
+    //display loading icon
     _loadingIcon = loadingIcon;
     _loadingIcon->setVisible(true);
     
+    //set CCListView of global ranking list for later use
     _globalList = globalList;
+    
+    //hide newwork error icon
+    _networkErrorIcon = networkError;
+    _networkErrorIcon->setVisible(false);
+    
     _waitingForResponse = true;
-    _destroyClient = true;
     
 }
 
+//will be called after the response of getting global ranking arrived
 void RankingAccessor::callbackForGetRankingsFromServer(CCNode *node, CCObject *obj) {
+    
+    _waitingForResponse = false;
+    
+    //hide loading icon
     if (_loadingIcon) {
         _loadingIcon->setVisible(false);
     }
     
     CCHttpResponse * response = (CCHttpResponse *) obj;
+
+    //if the request failed
+    //show network error icon
     if (! response->isSucceed()) {
         CCLog("Receive Error! %s", response->getErrorBuffer());
+        _networkErrorIcon->setVisible(true);
         return;
     }
     
+    //if the request success
+    //hide network error icon
+    _networkErrorIcon->setVisible(false);
+    
+    //parse response JSON data
     std::vector<char> * data = response->getResponseData();
     std::string dataStr = "";
     for (int i = 0, len = data->size(); i < len ; i ++) {
@@ -167,7 +194,6 @@ void RankingAccessor::callbackForGetRankingsFromServer(CCNode *node, CCObject *o
         //push the UILabel to UIListView
         _globalList->pushBackCustomItem(rankingLabel);
     }
-    _waitingForResponse = false;
 }
 
 int RankingAccessor::getGlobalRankingCount() const {
@@ -187,15 +213,14 @@ bool RankingAccessor::isWaitingForResponse() {
 }
 
 void RankingAccessor::clearUnfinishedRequests() {
-    _getRequest->setResponseCallback(this, httpresponse_selector(RankingAccessor::blankCallback));
+    _getRankingRequest->setResponseCallback(this, httpresponse_selector(RankingAccessor::blankCallback));
 }
 
 void RankingAccessor::blankCallback(cocos2d::CCNode *node, cocos2d::CCObject *obj) {
-    CCLog("Blank callback is executed");
+
 }
 
 RankingAccessor::~RankingAccessor() {
-    CCLog("Ranking Accessor Destructor called");
-    _getRequest->release();
-    _postRequest->release();
+    _getRankingRequest->release();
+    _addRankingRequest->release();
 }
