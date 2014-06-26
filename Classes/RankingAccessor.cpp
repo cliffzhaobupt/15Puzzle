@@ -62,22 +62,22 @@ bool RankingAccessor::isLocalRankingValid() const {
     return _localRankingValid;
 }
 
-//how many ranking items in the ranking
+//how many ranking items in the local ranking
 int RankingAccessor::getLocalRankingCount() const {
     return _localRankingCount;
 }
 
-//get user name of one item in the ranking
+//get user name of one item in the local ranking
 const char * RankingAccessor::getLocalUserAtIndex(unsigned int i) const {
     return _localRankings[i]["user"].GetString();
 }
 
-//get time of one item in the ranking
+//get time of one item in the local ranking
 int RankingAccessor::getLocalTimeAtIndex(unsigned int i) const {
     return _localRankings[i]["time"].GetInt();
 }
 
-//insert one item into the ranking
+//insert one item into the local ranking and global ranking
 void RankingAccessor::insertRankingItem(const char *name, int time) {
     //save new ranking to local json file
     Document newRankings;
@@ -196,26 +196,35 @@ void RankingAccessor::callbackForGetRankingsFromServer(CCNode *node, CCObject *o
     }
 }
 
+//how many ranking items in the global ranking
 int RankingAccessor::getGlobalRankingCount() const {
     return _globalRankingCount;
 }
 
+//get user name of one item in the local ranking
 const char * RankingAccessor::getGlobalUserAtIndex(unsigned int i) const {
     return _globalRankings[i]["name"].GetString();
 }
 
+//get time of one item in the global ranking
 int RankingAccessor::getGlobalTimeAtIndex(unsigned int i) const {
     return _globalRankings[i]["time"].GetInt();
 }
 
+//is waiting for the response of getting global ranking request
 bool RankingAccessor::isWaitingForResponse() {
     return _waitingForResponse;
 }
 
+//when user exit the ranking scene
+//we clear unfinished request callbacks
+//by replacing the original callbacks of unfinished request
+//of blank callback
 void RankingAccessor::clearUnfinishedRequests() {
     _getRankingRequest->setResponseCallback(this, httpresponse_selector(RankingAccessor::blankCallback));
 }
 
+//blank callback
 void RankingAccessor::blankCallback(cocos2d::CCNode *node, cocos2d::CCObject *obj) {
 
 }
