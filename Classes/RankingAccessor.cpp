@@ -176,8 +176,8 @@ void RankingAccessor::callbackForGetRankingsFromServer(CCNode *node, CCObject *o
     //parse response JSON data
     std::vector<char> * data = response->getResponseData();
     std::string dataStr = "";
-    for (int i = 0, len = data->size(); i < len ; i ++) {
-        dataStr += (*data)[i];
+    for (std::vector<char>::const_iterator iter = data->begin() ; iter != data->end() ; ++ iter) {
+        dataStr += *iter;
     }
     
     do {
