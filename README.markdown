@@ -40,3 +40,20 @@ After finishing the game, user can input his name, in order to add his name and 
 Later, user can select to start another game, or to check the ranking
 
 (For debugging, the game was set to be very simple...)
+
+## Week 3
+<img src="https://github.com/cliffzhaobupt/15Puzzle/raw/master/SampleGIF/global_ranking.gif"/>
+
+In the ranking scene, user can touch Global Ranking tab to see global ranking.
+
+After touching that tab, client will send a GET request to the server in order to acquire global ranking.
+
+After response has arrived, global ranking will be displayed.
+
+If the request failed, Network Error will be displayed.(In the GIF, I shut the server down...)
+
+<img src="https://github.com/cliffzhaobupt/15Puzzle/raw/master/SampleGIF/finish_game_week_3.gif"/>
+
+After the game has finished and user name has been entered, client will send a POST request to the server in order to add a new record.
+
+As you can see in the GIF, both the Local Ranking and Global Ranking are updated.
